@@ -17,7 +17,10 @@ PoRePlot <- function(m, lab.id = rownames(m$model), nlab.po = 1,
   # Package Dependence: {ggplot2}
   # Author: Xinkai Zhou
   
-  library(ggplot2)
+  # Load ggplot2
+  ifelse("ggplot2" %in% installed.packages()[, "Package"],
+         library(ggplot2),
+         install.packages("ggplot2", repos="http://cran.cnr.Berkeley.edu/"))
   # Compute potential function
   potential.fun <- hatvalues(m)/(1-hatvalues(m))
   # Compute normalized residual
@@ -25,10 +28,12 @@ PoRePlot <- function(m, lab.id = rownames(m$model), nlab.po = 1,
   # Compute residual function
   residual.fun <- ((length(m$coefficients)) * (d^2)) / 
     ((1 - potential.fun) * (1 - d^2))
+  # Points above cutoff will be labeled with texts.
   potential.cutoff <- sort(potential.fun, decreasing = T)[nlab.po]
   residual.cutoff <- sort(residual.fun, decreasing = T)[nlab.re]
   cat("High Leverage: ", lab.id[potential.fun >= potential.cutoff], "\n")
   cat("High Residual: ", lab.id[residual.fun >= residual.cutoff], "\n")
+  # Produce plot.
   qplot(x = residual.fun, 
         y = potential.fun, 
         label = lab.id, 
