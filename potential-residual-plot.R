@@ -38,9 +38,24 @@ PoRePlot <- function(m, lab.id = rownames(m$model), nlab.po = 1,
         y = potential.fun, 
         label = lab.id, 
         geom = "point") + 
-    geom_text(angle = 45, 
-              aes(size = ifelse((residual.fun >= residual.cutoff) | 
-                                  (potential.fun >= potential.cutoff), 
-                                1, 0)), show_guide = F) + 
+    geom_text(angle = 30, 
+              aes(alpha = ifelse((residual.fun >= residual.cutoff) | 
+                                (potential.fun >= potential.cutoff), 1, 0)), 
+              hjust = 0, vjust = 0,
+              show_guide = F) + 
+    scale_x_continuous(expand = c(0, 0.1)) + 
+    scale_y_continuous(expand = c(0, 1)) + 
     labs(title = "Potential-Residual Plot")
 }
+
+
+
+# A working example
+rivers <- read.table("http://www1.aucegypt.edu/faculty/hadi/RABE5/Data5/P010.txt", 
+                     sep = "\t", header = T, stringsAsFactors = F)
+m <- lm(rivers$Nitrogen ~ rivers$ComIndl)
+PoRePlot(m, lab.id = rivers$River, nlab.po = 1, nlab.re = 4)
+
+
+
+
